@@ -1,0 +1,25 @@
+{
+  "name": "wechat_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.4",
+    "koa-body": "^4.2.0",
+    "koa-router": "^10.1.1",
+    "koa-session": "^6.2.0",
+    "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
+    "md5": "^2.3.0",
+    "moment": "^2.29.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.12.4",
+    "string-random": "^0.1.3"
+  }
+}
