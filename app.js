@@ -5,8 +5,21 @@ const session = require('koa-session')
 const static = require('koa-static')
 const path = require('path')
 const app = new Koa()
+let server = require('http').createServer(app)
+// ws port
+server.listen(1234)
+// ws config
+let io = require('socket.io')(server, {
+  cors: {
+    origin: 'http://localhost:8080',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+  allowEIO3: true
+})
 
 app.context.config = require('./config')
+
 app.use(cors({
   origin: 'http://localhost:8080',
   exposeHeaders: ['WWW-Authenticate', 'Server-Authenticate'],
@@ -26,10 +39,7 @@ app.use(koaBody({
 // session 配置
 const SESSION_CONFIG = {
   key: 'koa:sess', /** (string) cookie key (default is koa:sess) cookie 的Name */
-  /** (number || 'session') maxAge in ms (default is 1 days) */
-  /** 'session' will result in a cookie that expires when session/browser is closed */
-  /** Warning: If a session cookie is stolen, this cookie will never expire */
-  maxAge: 86400000, /** cookie 的过期时间 */
+  maxAge: 86400000, /** cookie 的过期时间 60*60*24*1000 = 24小时 格林威治时间 */
   autoCommit: true, /** (boolean) automatically commit headers (default true) */
   overwrite: true, /** (boolean) can overwrite or not (default true) */
   httpOnly: true, /** (boolean) httpOnly or not (default true) */
@@ -56,10 +66,19 @@ app.use(async (ctx) => {
   }
 })
 
+io.on('connection', socket => {
+  // socket.on('message', (data) => {
+  //   console.log(data)
+  // })
+
+  socket.emit('test', 'test msg')
+})
+
 // 内部错误处理
 app.on('error', function(err, ctx) {
   console.log('server error', err, ctx)
 })
+
 
 app.listen(app.context.config.port)
 console.log(`listening on port ${app.context.config.port}`)

@@ -5,6 +5,7 @@ const validateEmail = require('../utils/validate_email')
 const stringRandom = require('string-random')
 const randomAvatar = require('../utils/randomAvatar')
 const delayer = require('../utils/index')
+const { joinRootGroup } = require('./group')
 
 // 登录验证
 const checkSession = function (ctx) {
@@ -27,11 +28,16 @@ const resp = async function (ctx, code, message, userInfo = {}) {
     // delay
     await delayer(2000)
     ctx.body = { code, message, userInfo }
-    return
   } else {
     await delayer(2000)
     ctx.body = { code, message }
   }
+}
+// successfully sign up
+const signUpOK = async function (ctx, data) {
+  await resp(ctx, 200, 'sign up success !!', data)
+  // 注册成功自动加入 root 群聊
+  const res = await joinRootGroup(data)
 }
 
 // 登录 model
@@ -58,7 +64,7 @@ const postSignUp = async (ctx) => {
   // 邮箱格式不正确
   if (!validateEmail(email)) { await resp(ctx, 400, 'email illegal !'); return }
   // 初始化随机用户名
-  const username = stringRandom(12)
+  const username = stringRandom(16)
   const uid = username
   await UserModel.findOne({ where: { email } }).then(async res => {
     // email 验证
@@ -70,7 +76,7 @@ const postSignUp = async (ctx) => {
       timestamp: new Date().toLocaleString()
     }).then(async res => {
       res && res.dataValues
-        ? await resp(ctx, 200, 'sign up success !!', res.dataValues)
+        ? await signUpOK(ctx, res.dataValues)
         : await resp(ctx, 400, 'sign up has failed !!')
     }).catch(async err => {
       // stringRandom 不是唯一随机字符串

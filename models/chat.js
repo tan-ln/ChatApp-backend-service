@@ -2,8 +2,7 @@ const { DataTypes } = require('sequelize')
 const sequelize = require('./index')
 
 // 数据表跟对象的映射 
-// user => users 单数的user会自动对应users 
-const User = sequelize.define('users', {
+const Chat = sequelize.define('chats', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -17,4 +16,4 @@ const User = sequelize.define('users', {
   timestamp: { type: DataTypes.DATE, unique: true },
 })
 
-module.exports = User
+module.exports = Chat

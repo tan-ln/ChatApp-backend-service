@@ -72,3 +72,40 @@ app.use(cors({
 ## Sequelize
 - Sequelize 是一个基于 promise 的 nodejs OEM 框架，支持对 mysql 等简单关系型数据库源
 - 通过映射数据库条目到对象，或者对象到数据库，对数据库增删改查
+
+
+## socket.io
+
+## 端口冲突问题
+另行配置
+```js
+let server = require('http').createServer(app)
+server.listen(1234)
+// ws
+let io = require('socket.io')(server, {
+  cors: {
+    origin: 'http://localhost:8080',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+  allowEIO3: true
+})
+
+io.on("connection", socket => {
+  // either with send()
+  socket.send("Hello!");
+
+  // or with emit() and custom event names
+  socket.emit("greetings", "Hey!", { "ms": "jane" }, Buffer.from([4, 3, 3, 1]));
+
+  // handle the event sent with socket.send()
+  socket.on("message", (data) => {
+    console.log(data);
+  });
+
+  // handle the event sent with socket.emit()
+  socket.on("salutations", (elem1, elem2, elem3) => {
+    console.log(elem1, elem2, elem3);
+  });
+});
+```

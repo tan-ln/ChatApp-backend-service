@@ -1,8 +1,9 @@
-const controller = require('../controller/user')
+const controller = require('../controller/chat')
 
 module.exports = (app, router) => {
 
-  router.post('/chat/signin', controller.postSignIn)
+  router.post('/chat', controller.getChatMsg)
+  router.get('/chat', controller.getChatMsg)
   // router.get('/api/signin/token', controller.verfiyToken)
 
   // router.post('/user/signup', controller.postSignUp)
