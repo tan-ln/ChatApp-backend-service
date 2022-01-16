@@ -5,19 +5,7 @@ const validateEmail = require('../utils/validate_email')
 const stringRandom = require('string-random')
 const randomAvatar = require('../utils/randomAvatar')
 const delayer = require('../utils/index')
-const { joinRootGroup } = require('./group')
-
-// 登录验证
-const checkSession = function (ctx) {
-  if (!ctx.session.userInfo) {
-    ctx.body = {
-      code: 401,
-      message: 'Unauthorized !!! Sign In First'
-    }
-  } else {
-    next()
-  }
-}
+// const { joinRootGroup } = require('./group')
 
 // response function
 const resp = async function (ctx, code, message, userInfo = {}) {
@@ -37,7 +25,7 @@ const resp = async function (ctx, code, message, userInfo = {}) {
 const signUpOK = async function (ctx, data) {
   await resp(ctx, 200, 'sign up success !!', data)
   // 注册成功自动加入 root 群聊
-  const res = await joinRootGroup(data)
+  // await joinRootGroup(data)
 }
 
 // 登录 model
