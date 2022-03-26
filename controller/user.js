@@ -5,7 +5,7 @@ const validateEmail = require('../utils/validate_email')
 const stringRandom = require('string-random')
 const randomAvatar = require('../utils/randomAvatar')
 const delayer = require('../utils/index')
-// const { joinRootGroup } = require('./group')
+const { getGroupInfo } = require('./group')
 
 // response function
 const resp = async function (ctx, code, message, userInfo = {}) {
@@ -21,12 +21,6 @@ const resp = async function (ctx, code, message, userInfo = {}) {
     ctx.body = { code, message }
   }
 }
-// successfully sign up
-const signUpOK = async function (ctx, data) {
-  await resp(ctx, 200, 'sign up success !!', data)
-  // 注册成功自动加入 root 群聊
-  // await joinRootGroup(data)
-}
 
 // 登录 model
 const postSignIn = async (ctx) => {
@@ -41,6 +35,7 @@ const postSignIn = async (ctx) => {
     res.dataValues.password === md5(password)
       ? await resp(ctx, 200, 'sign in success!!', res.dataValues)
       : await resp(ctx, 401, 'wrong password!!')
+      // ? await signUpOK(ctx, 'sign in success!!', res.dataValues)
   }).catch(async err => {
     await resp(ctx, 500, 'serve error!!!')
     console.log(err)
@@ -64,8 +59,9 @@ const postSignUp = async (ctx) => {
       timestamp: new Date().toLocaleString()
     }).then(async res => {
       res && res.dataValues
-        ? await signUpOK(ctx, res.dataValues)
+        ? await resp(ctx, 200, 'sign up success!!', res.dataValues)
         : await resp(ctx, 400, 'sign up has failed !!')
+      // ? await signUpOK(ctx, 'sign up success !!', res.dataValues)
     }).catch(async err => {
       // stringRandom 不是唯一随机字符串
       await resp(ctx, 500, 'serve create entry error!!! try again')

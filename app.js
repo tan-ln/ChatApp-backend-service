@@ -39,14 +39,9 @@ app.use(koaBody({
 
 // session 配置
 const SESSION_CONFIG = {
-  key: 'koa:sess', /** (string) cookie key (default is koa:sess) cookie 的Name */
-  maxAge: 3600000, /** cookie 的过期时间 60*60*24*1000 = 24小时 格林威治时间 */
-  autoCommit: true, /** (boolean) automatically commit headers (default true) */
-  // overwrite: true, /** (boolean) can overwrite or not (default true) */
-  // httpOnly: true, /** cookie是否只有服务器端可以访问 httpOnly or not (default true) */
-  // signed: true, /** (boolean) signed or not (default true) */
-  // rolling: false, /** 在每次请求时强行设置cookie，这将重置cookie过期时间（默认：false） */
-  // renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
+  key: 'koa:sess',
+  maxAge: 3600000,
+  autoCommit: true,
   store: new Store()
 }
 app.keys = ['tanln'] // 加密密钥
@@ -60,12 +55,13 @@ app.use(static(
 
 // 登录拦截
 app.use(async (ctx, next) => {
-  console.log(ctx.cookies.get('koa:sess'), ctx.path)
+  // console.log(ctx.cookies.get('koa:sess'), ctx.path)
   if(!ctx.cookies.get('koa:sess') && ctx.path !== '/user/signin' && ctx.path !== '/user/signup') {
     ctx.body = {
       code: 401,
       message: 'Unauthorized !!! Sign In First'
     }
+    console.log('Unauthorized')
   } else {
     await next()
   }
@@ -83,18 +79,17 @@ app.use(async (ctx) => {
 
 // socket
 const registerUserHandlers = require('./socket/userHandler')
-
-// io.use((socket, next) => {
-//   console.log(socket.id)
-//   if (socket.id) {
-//     next()
-//   } else {
-//     next(new Error("invalid"))
-//   }
-// })
+const registerMsgHandlers = require('./socket/msgHandler')
 
 const onConnection = socket => {
+  console.log('connect : ' + socket.id)
+  registerMsgHandlers(io, socket)
   registerUserHandlers(io, socket)
+
+  // 断开连接
+  socket.on('disconnect', () => {
+    console.log('disconnect: ' + socket.id)
+  })
 }
 
 io.on('connection', onConnection)
