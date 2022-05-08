@@ -9,7 +9,7 @@ const GroupModel = sequelize.define('groups', {
   gmember: { type: DataTypes.TEXT },
   timestamp: { type: DataTypes.DATE, unique: true },
 })
-
+// CREATE TABLE IF NOT EXISTS `groups`
 GroupModel.sync() // sync({ force:true }) => delete it if exists
 
 module.exports = GroupModel

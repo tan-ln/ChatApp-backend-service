@@ -3,7 +3,7 @@ const md5 = require('md5')
 const UserModel = require('../models/user')
 const validateEmail = require('../utils/validate_email')
 const stringRandom = require('string-random')
-const randomAvatar = require('../utils/randomAvatar')
+const { randomAvatar } = require('../utils/randomAvatar')
 const delayer = require('../utils/index')
 const { getGroupInfo } = require('./group')
 
@@ -55,7 +55,8 @@ const postSignUp = async (ctx) => {
     // 注册
     await UserModel.create({ uid, email, username,
       password: md5(password),
-      avatar: `http://127.0.0.1:${ctx.config.port}/images/${randomAvatar}`,
+      avatar: `http://127.0.0.1:${ctx.config.port}/images/avatar/222/${randomAvatar()}`,
+      groups: "['root']",
       timestamp: new Date().toLocaleString()
     }).then(async res => {
       res && res.dataValues

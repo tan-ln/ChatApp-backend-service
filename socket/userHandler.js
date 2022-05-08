@@ -1,10 +1,14 @@
+const { joinGroup } = require('../controller/group')
+
 module.exports = (io, socket) => {
   const goOnLine = (user, path) => {
     // 注册 成功自动加入 root 群聊，返回 root 群详情，推送 xx 加入群聊消息
+    joinGroup('root', user)
+
     if (path === 'signup') {
       const msg = {
         group: 'root',
-        from: 'root',
+        from: 'app',
         to: 'all',
         type: 'text',
         content: user.email + '加入群聊',
@@ -19,7 +23,7 @@ module.exports = (io, socket) => {
     if (path === 'signin') {
       const msg = {
         group: 'root',
-        from: 'root',
+        from: 'app',
         to: 'all',
         type: 'text',
         content: user.email + '上线啦!',
