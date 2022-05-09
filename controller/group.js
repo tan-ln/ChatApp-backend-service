@@ -47,6 +47,26 @@ const getRootGroup = async (ctx) => {
   })
 }
 
+const getGroupFiles = (ctx) => {
+  ctx.body ={
+    code: 200,
+    data: [
+      '以父之名.mp3',
+      '已经在做了.jpg',
+      '新建文档.doc',
+      '学习资料.zip',
+      'Java 从入门到放弃.html',
+      '星际穿越.rmvb',
+      '电脑配件.zip',
+      '母猪的产后护理.txt',
+      '.gitigore',
+      'resume.pdf',
+      '30 系显卡.jpg',
+      'MIUI13 发布会.ppt'
+    ]
+  }
+}
+
 // const getGroupInfo = (ctx) => async (group) => {
 //   await GroupModel.findOne({ where: { gname: group } }).then(res => {
 //     return res
@@ -57,5 +77,6 @@ const getRootGroup = async (ctx) => {
 
 module.exports = {
   joinGroup,
-  getRootGroup
+  getRootGroup,
+  getGroupFiles
 }

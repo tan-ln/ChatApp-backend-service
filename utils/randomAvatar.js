@@ -12,8 +12,8 @@ const md5 = require('md5')
 // 	})
 
 function randomAvatar () {
-	const _path = __dirname + '/../static/images/avatar/222'
-	let imagesNameArr = fs.readdirSync(_path)
+	const file_path = __dirname + '/../static/images/avatar/222'
+	let imagesNameArr = fs.readdirSync(file_path)
 	let index = Math.floor(Math.random() * imagesNameArr.length + 1) - 1
 	console.log(imagesNameArr[index]);
 	return imagesNameArr[index]
