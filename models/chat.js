@@ -1,8 +1,7 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('./index')
 
-// 数据表跟对象的映射 
-const Chat = sequelize.define('chats', {
+const ChatModel = sequelize.define('chats', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -16,4 +15,4 @@ const Chat = sequelize.define('chats', {
   timestamp: { type: DataTypes.DATE, unique: true },
 })
 
-module.exports = Chat
+module.exports = ChatModel

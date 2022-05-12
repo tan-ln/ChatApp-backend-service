@@ -9,7 +9,7 @@ const User = sequelize.define('users', {
   username: { type: DataTypes.STRING, unique: true },
   password: { type: DataTypes.STRING },
   avatar: { type: DataTypes.STRING },
-  groups: { type: DataTypes.STRING },
+  contacts: { type: DataTypes.TEXT('long') },
   timestamp: { type: DataTypes.DATE, unique: true },
 })
 // CREATE TABLE IF NOT EXISTS `uses`

@@ -4,8 +4,8 @@ const UserModel = require('../models/user')
 const validateEmail = require('../utils/validate_email')
 const stringRandom = require('string-random')
 const { randomAvatar } = require('../utils/randomAvatar')
+const { randomName } = require('../utils/randomName')
 const delayer = require('../utils/index')
-const { getGroupInfo } = require('./group')
 
 // response function
 const resp = async function (ctx, code, message, userInfo = {}) {
@@ -47,16 +47,16 @@ const postSignUp = async (ctx) => {
   // 邮箱格式不正确
   if (!validateEmail(email)) { await resp(ctx, 400, 'email illegal !'); return }
   // 初始化随机用户名
-  const username = stringRandom(16)
-  const uid = username
+  const username = randomName()
+  const uid = stringRandom(16)
   await UserModel.findOne({ where: { email } }).then(async res => {
     // email 验证
     if (res) { await resp(ctx, 401, 'this email already exists!'); return }
     // 注册
     await UserModel.create({ uid, email, username,
       password: md5(password),
-      avatar: `http://127.0.0.1:${ctx.config.port}/images/avatar/222/${randomAvatar()}`,
-      groups: "['root']",
+      avatar: `http://127.0.0.1:${ctx.config.port}/images/avatar/${randomAvatar()}`,
+      contacts: '[]',
       timestamp: new Date().toLocaleString()
     }).then(async res => {
       res && res.dataValues

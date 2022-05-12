@@ -6,7 +6,7 @@ const GroupModel = sequelize.define('groups', {
   gid: { type: DataTypes.STRING, primaryKey: true, unique: true },
   gname: { type: DataTypes.STRING },
   gavatar: { type: DataTypes.STRING },
-  gmember: { type: DataTypes.TEXT },
+  gmember: { type: DataTypes.TEXT('long') },
   timestamp: { type: DataTypes.DATE, unique: true },
 })
 // CREATE TABLE IF NOT EXISTS `groups`
