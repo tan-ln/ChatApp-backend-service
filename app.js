@@ -78,13 +78,17 @@ app.use(async (ctx) => {
 })
 
 // socket
+// 简单 socket id 存储
 const registerUserHandlers = require('./socket/userHandler')
 const registerMsgHandlers = require('./socket/msgHandler')
+const registerContactHandlers = require('./socket/contactHandler')
 
 const onConnection = socket => {
   console.log('connect : ' + socket.id)
-  registerMsgHandlers(io, socket)
+
   registerUserHandlers(io, socket)
+  registerMsgHandlers(io, socket)
+  registerContactHandlers(io, socket)
 
   // 断开连接
   socket.on('disconnect', () => {
