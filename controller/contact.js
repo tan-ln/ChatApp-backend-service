@@ -42,30 +42,33 @@ const getAllContacts = async (ctx) => {
 
 // 添加好友建立连接
 const addContacts = async (self, target) => {
-  const users = await UserModel.findAll({
+  const userIns = await UserModel.findAll({
     where: { email: [self, target] },
-    attributes: ['uid', 'email', 'username', 'avatar', 'contacts']
+    attributes: ['email', 'username', 'avatar']
   })
-  let a_temp = [...JSON.parse(users[0].contacts), {
-    ...users[1].dataValues,
-    timestamp: Date.now()
-  }]
-  let b_temp = [...JSON.parse(users[1].contacts), {
-    ...users[0].dataValues,
-    timestamp: Date.now()
-  }]
-  users[0].contacts = JSON.stringify(a_temp)
-  users[1].contacts = JSON.stringify(b_temp)
-  await users[0].save()
-  await users[1].save()
-  const a_list = a_temp.filter(item => Reflect.deleteProperty(item, 'contacts'))
-  const b_list = b_temp.filter(item => Reflect.deleteProperty(item, 'contacts'))
-  // 联系人按首字母排序
-  const sortByFirstLetter = require('../utils/sortByFirstLetter')
-  return {
-    a: sortByFirstLetter(a_list, 'username'),
-    b: sortByFirstLetter(b_list, 'username')
-  }
+  const contactIns = await UserModel.findAll({
+    where: { email: [self, target] },
+    attributes: ['uid', 'contacts']
+  })
+  const self_contact = [
+    ...JSON.parse(contactIns[0].contacts),
+    {
+      ...userIns[1].dataValues,
+      timestamp: Date.now()
+    }
+  ]
+  const target_contact = [
+    ...JSON.parse(contactIns[1].contacts),
+    {
+      ...userIns[0].dataValues,
+      timestamp: Date.now()
+    }
+  ]
+
+  contactIns[0].contacts = JSON.stringify(self_contact)
+  contactIns[1].contacts = JSON.stringify(target_contact)
+  await contactIns[0].save()
+  await contactIns[1].save()
 }
 
 module.exports = {

@@ -23,13 +23,12 @@ module.exports = (io, socket) => {
 
   // 双向订阅
   const userSubscribe = async ({ self, target }) => {
-    const { a, b } = await addContacts(self, target)
+    await addContacts(self, target)
     const b_socketId = await redis.get_socket(target)
     // to self
     socket.emit('__private', {
       type: 'subscribe',
       data: {
-        list: b,
         group: null,
         from: target,
         to: self,
@@ -42,7 +41,6 @@ module.exports = (io, socket) => {
     socket.to(b_socketId).emit('__private', {
       type: 'subscribe',
       data: {
-        list: a,
         group: null,
         from: self,
         to: target,

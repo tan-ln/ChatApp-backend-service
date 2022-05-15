@@ -22,7 +22,7 @@ function sortByFirstLetter (arr, attr) {
 module.exports = function (arr, attr) {
   const res = sortByFirstLetter(arr, attr)
   return res.reduce((total, curItem, curIdx) => {
-    if (total[curItem.firstLetter] && total[curItem.firstLetter] === curItem.firstLetter) {
+    if (total[curItem.firstLetter] && total[curItem.firstLetter][0].firstLetter === curItem.firstLetter) {
       total[curItem.firstLetter].push(curItem)
     } else {
       total[curItem.firstLetter] = [curItem]

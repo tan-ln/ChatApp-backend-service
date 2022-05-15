@@ -22,6 +22,8 @@ module.exports = (io, socket) => {
         data: msg
       })
       redis.set_socket(email, socket.id)
+      // 所有在线用户room
+      socket.join('root')
     }
     // 登录成功 广播 上线消息
     if (path === 'signin') {
@@ -38,13 +40,22 @@ module.exports = (io, socket) => {
         data: msg
       })
       redis.set_socket(email, socket.id)
+      // 所有在线用户room
+      socket.join('root')
     }
   }
 
-  const offLine = (email) => {
-    redis.del_socket(email)
+  const offLine = async (email) => {
+    await redis.del_socket(email)
+  }
+
+  const flushBrow = (email) => {
+    // 所有在线用户room
+    socket.join('root')
+    redis.set_socket(email, socket.id)
   }
 
   socket.on('user:goOnLine', goOnLine)
   socket.on('user:offLine', offLine)
+  socket.on('user:flushBrow', flushBrow)
 }
